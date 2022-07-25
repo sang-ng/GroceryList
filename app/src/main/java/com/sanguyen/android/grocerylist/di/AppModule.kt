@@ -30,5 +30,5 @@ object AppModule {
         return ShoppingItemRepositoryImpl(db.shoppingItemDao)
     }
 
-   
+
 }
