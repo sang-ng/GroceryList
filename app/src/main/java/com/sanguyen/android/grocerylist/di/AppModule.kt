@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.sanguyen.android.grocerylist.feature_shoppingitem.data.data_source.ShoppingItemDatabase
 import com.sanguyen.android.grocerylist.feature_shoppingitem.data.repository.ShoppingItemRepositoryImpl
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.repository.ShoppingItemRepository
+import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +31,14 @@ object AppModule {
         return ShoppingItemRepositoryImpl(db.shoppingItemDao)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideShoppingItemsUseCases(repository: ShoppingItemRepository): ShoppingItemUseCases {
+        return ShoppingItemUseCases(
+            getShoppingItems = GetShoppingItems(repository),
+            deleteShoppingItem = DeleteShoppingItem(repository),
+            addShoppingItem = AddShoppingItem(repository),
+            getShoppingItemById = GetShoppingItemById(repository)
+        )
+    }
 }
