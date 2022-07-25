@@ -1,12 +1,9 @@
 package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.room.Insert
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
@@ -25,8 +22,8 @@ class ShoppingItemsViewModel @Inject constructor(
     private val useCases: ShoppingItemUseCases
 ) : ViewModel() {
 
-    private val _shoppingItems = mutableStateOf(ShoppingItemListState())
-    val shoppingItems = _shoppingItems
+    private val _state = mutableStateOf(ShoppingItemListState())
+    val state = _state
 
     private var recentlyDeletedItem: ShoppingItem? = null
 
@@ -80,6 +77,12 @@ class ShoppingItemsViewModel @Inject constructor(
                     }
                 }
             }
+            is ShoppingItemsEvent.DeleteShoppingItem -> {
+                viewModelScope.launch {
+                    useCases.deleteShoppingItem(event.shoppingItem)
+                    _eventFlow.emit(UiEvent.DeleteNote)
+                }
+            }
         }
     }
 
@@ -88,7 +91,7 @@ class ShoppingItemsViewModel @Inject constructor(
 
         getShoppingItemsJob = useCases.getShoppingItems()
             .onEach { items ->
-                _shoppingItems.value = shoppingItems.value.copy(
+                _state.value = state.value.copy(
                     shoppingItems = items
                 )
             }.launchIn(viewModelScope)
