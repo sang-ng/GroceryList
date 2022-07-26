@@ -44,13 +44,22 @@ fun ShoppingItemsScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is ShoppingItemsViewModel.UiEvent.DeleteNote -> {
-                    println("hi")
                 }
             }
         }
     }
 
     Scaffold(
+        scaffoldState = scaffoldState,
+        snackbarHost = {
+            // reuse default SnackbarHost to have default animation and timing handling
+            SnackbarHost(it) { data ->
+                // custom snackbar with the custom colors
+                Snackbar(
+                    snackbarData = data
+                )
+            }
+        },
         topBar = {
             TopAppBar(
                 title = { Text("Grocerylist") },
@@ -107,6 +116,16 @@ fun ShoppingItemsScreen(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
                             viewModel.onEvent(ShoppingItemsEvent.DeleteShoppingItem(item))
+                            scope.launch {
+                                val result = scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Item deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.onEvent(ShoppingItemsEvent.RestoreShoppingItem)
+                                    println("Clicked")
+                                }
+                            }
                         }
                         true
                     }

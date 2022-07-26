@@ -80,7 +80,13 @@ class ShoppingItemsViewModel @Inject constructor(
             is ShoppingItemsEvent.DeleteShoppingItem -> {
                 viewModelScope.launch {
                     useCases.deleteShoppingItem(event.shoppingItem)
-                    _eventFlow.emit(UiEvent.DeleteNote)
+                    recentlyDeletedItem = event.shoppingItem
+                }
+            }
+            is ShoppingItemsEvent.RestoreShoppingItem -> {
+                viewModelScope.launch {
+                    useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
+                    recentlyDeletedItem = null
                 }
             }
         }
