@@ -15,23 +15,13 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.Shoppi
 @Composable
 fun ShoppingItem(
     shoppingItem: ShoppingItem,
-    modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
     ) {
         Checkbox(checked = false, onCheckedChange = {})
         Text(text = shoppingItem.title)
-        IconButton(
-            onClick = onDeleteClick,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete item",
-                tint = Color.Black
-            )
-        }
     }
 }
