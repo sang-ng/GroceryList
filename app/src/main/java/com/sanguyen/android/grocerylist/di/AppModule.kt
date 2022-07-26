@@ -38,7 +38,8 @@ object AppModule {
             getShoppingItems = GetShoppingItems(repository),
             deleteShoppingItem = DeleteShoppingItem(repository),
             addShoppingItem = AddShoppingItem(repository),
-            getShoppingItemById = GetShoppingItemById(repository)
+            getShoppingItemById = GetShoppingItemById(repository),
+            updateShoppingItem = UpdateShoppingItem(repository)
         )
     }
 }

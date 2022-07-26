@@ -1,7 +1,6 @@
 package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
@@ -19,11 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingItem
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
 import kotlinx.coroutines.flow.collectLatest
@@ -161,11 +157,14 @@ fun ShoppingItemsScreen(
                         }
                     },
                     dismissContent = {
-                        ShoppingItem(
+                        ShoppingListItem(
                             shoppingItem = item,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.White)
+                                .background(Color.White),
+                            onChecked = {
+                                viewModel.onEvent(ShoppingItemsEvent.MarkShoppingItem(item))
+                            }
                         )
                     }
                 )

@@ -4,6 +4,6 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.Shoppi
 
 data class ShoppingItemListState(
     val isLoading: Boolean = false,
-    val shoppingItems: List<ShoppingItem> = emptyList()
+    var shoppingItems: List<ShoppingItem> = emptyList()
 ) {
 }

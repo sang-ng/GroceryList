@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class ShoppingItem(
     val title: String,
-    val isFavorite: Boolean,
+    var isFavorite: Boolean = false,
+    var isMarked : Boolean = false,
     @PrimaryKey val id: Int? = null
 ) {
 

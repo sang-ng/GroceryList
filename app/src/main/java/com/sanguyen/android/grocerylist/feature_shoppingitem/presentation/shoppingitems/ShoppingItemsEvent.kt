@@ -9,4 +9,5 @@ sealed class ShoppingItemsEvent {
     data class DeleteShoppingItem(val shoppingItem: ShoppingItem) : ShoppingItemsEvent()
     object SaveItem : ShoppingItemsEvent()
     object RestoreShoppingItem : ShoppingItemsEvent()
+    data class MarkShoppingItem(val shoppingItem: ShoppingItem) : ShoppingItemsEvent()
 }

@@ -23,4 +23,8 @@ class ShoppingItemRepositoryImpl(
     override suspend fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         dao.deleteShoppingItem(shoppingItem)
     }
+
+    override suspend fun updateShoppingItem(shoppingItem: ShoppingItem) {
+        dao.updateShoppingItem(shoppingItem)
+    }
 }

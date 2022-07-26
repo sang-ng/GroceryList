@@ -9,4 +9,5 @@ interface ShoppingItemRepository {
     suspend fun getShoppingItemById(id: Int): ShoppingItem?
     suspend fun insertShoppingItem(shoppingItem: ShoppingItem)
     suspend fun deleteShoppingItem(shoppingItem: ShoppingItem)
+    suspend fun updateShoppingItem(shoppingItem: ShoppingItem)
 }

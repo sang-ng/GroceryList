@@ -1,6 +1,7 @@
 package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.Shoppi
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -39,6 +41,7 @@ class ShoppingItemsViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+
     init {
         getShoppingItems()
     }
@@ -61,7 +64,8 @@ class ShoppingItemsViewModel @Inject constructor(
                         useCases.addShoppingItem(
                             ShoppingItem(
                                 title = itemTitle.value.text,
-                                isFavorite = false
+                                isFavorite = false,
+                                isMarked = false
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
@@ -87,6 +91,19 @@ class ShoppingItemsViewModel @Inject constructor(
                 viewModelScope.launch {
                     useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
                     recentlyDeletedItem = null
+                }
+            }
+            is ShoppingItemsEvent.MarkShoppingItem -> {
+                viewModelScope.launch {
+
+                    event.shoppingItem.isMarked = !event.shoppingItem.isMarked
+                    useCases.updateShoppingItem(event.shoppingItem)
+
+                    //refresh List
+                    val current = _state.value.shoppingItems
+                    val replacement =
+                        current.map { if (it.id == event.shoppingItem.id) it.copy(isMarked = !it.isMarked) else it }
+                    _state.value.shoppingItems = replacement
                 }
             }
         }
