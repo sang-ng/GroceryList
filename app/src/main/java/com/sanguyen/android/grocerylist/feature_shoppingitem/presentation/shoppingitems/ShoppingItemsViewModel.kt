@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
@@ -117,7 +118,7 @@ class ShoppingItemsViewModel @Inject constructor(
             is ShoppingItemsEvent.RestoreShoppingItem -> {
                 viewModelScope.launch {
                     recentlyRemovedItem?.isActual = true
-                    recentlyRemovedItem?.let { useCases.updateShoppingItem(it) }
+                    recentlyRemovedItem?.let { useCases.addShoppingItem(it) }
                     recentlyRemovedItem = null
                 }
             }
@@ -128,10 +129,24 @@ class ShoppingItemsViewModel @Inject constructor(
         getShoppingItemsJob?.cancel()
 
         getShoppingItemsJob = useCases.getShoppingItems()
+
+
             .onEach { items ->
+
+                cleanShoppingItemDb(list = items)
+
                 _state.value = state.value.copy(
                     shoppingItems = items.filter { it.isActual }
                 )
             }.launchIn(viewModelScope)
+    }
+
+    private suspend fun cleanShoppingItemDb(list: List<ShoppingItem>) {
+
+        for (item in list) {
+            if (!item.isActual && !item.isFavorite) {
+                useCases.deleteShoppingItem(item)
+            }
+        }
     }
 }

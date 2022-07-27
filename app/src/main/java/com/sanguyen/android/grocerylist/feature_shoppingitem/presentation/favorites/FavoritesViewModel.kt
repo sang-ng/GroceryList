@@ -97,7 +97,7 @@ class FavoritesViewModel @Inject constructor(
                 viewModelScope.launch {
 
                     recentlyRemovedItem?.isFavorite = true
-                    recentlyRemovedItem?.let { useCases.updateShoppingItem(it) }
+                    recentlyRemovedItem?.let { useCases.addShoppingItem(it) }
                     recentlyRemovedItem = null
                 }
             }
