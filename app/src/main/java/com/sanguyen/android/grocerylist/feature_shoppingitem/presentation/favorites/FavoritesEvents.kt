@@ -8,7 +8,7 @@ sealed class FavoritesEvents {
     data class ChangedTitleFocus(val focusState: FocusState) : FavoritesEvents()
     data class RemoveFromFavorites(val shoppingItem: ShoppingItem) : FavoritesEvents()
     object SaveItem : FavoritesEvents()
-    object RestoreShoppingItem : FavoritesEvents()
+    data class RestoreFavorite(val shoppingItem: ShoppingItem) : FavoritesEvents()
     data class AddToActualList(val shoppingItem: ShoppingItem) : FavoritesEvents()
 
 }

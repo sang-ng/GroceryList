@@ -131,7 +131,6 @@ fun ShoppingItemsScreen(
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(ShoppingItemsEvent.RestoreShoppingItem)
-                                    println("Clicked")
                                 }
                             }
                         }

@@ -1,18 +1,15 @@
 package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.FavoritesEvents
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,7 +26,7 @@ class ShoppingItemsViewModel @Inject constructor(
     private val _state = mutableStateOf(ShoppingItemListState())
     val state = _state
 
-    private var recentlyDeletedItem: ShoppingItem? = null
+    private var recentlyRemovedItem: ShoppingItem? = null
 
     private var getShoppingItemsJob: Job? = null
 
@@ -86,13 +83,7 @@ class ShoppingItemsViewModel @Inject constructor(
             is ShoppingItemsEvent.DeleteShoppingItem -> {
                 viewModelScope.launch {
                     useCases.deleteShoppingItem(event.shoppingItem)
-                    recentlyDeletedItem = event.shoppingItem
-                }
-            }
-            is ShoppingItemsEvent.RestoreShoppingItem -> {
-                viewModelScope.launch {
-                    useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
-                    recentlyDeletedItem = null
+                    recentlyRemovedItem = event.shoppingItem
                 }
             }
             is ShoppingItemsEvent.MarkShoppingItem -> {
@@ -114,11 +105,20 @@ class ShoppingItemsViewModel @Inject constructor(
                     event.shoppingItem.isActual = false
                     useCases.updateShoppingItem(event.shoppingItem)
 
+                    recentlyRemovedItem = event.shoppingItem
+
                     //refresh List
                     val current = _state.value.shoppingItems
                     val replacement =
                         current.map { if (it.id == event.shoppingItem.id) it.copy(isActual = !it.isActual) else it }
                     _state.value.shoppingItems = replacement
+                }
+            }
+            is ShoppingItemsEvent.RestoreShoppingItem -> {
+                viewModelScope.launch {
+                    recentlyRemovedItem?.isActual = true
+                    recentlyRemovedItem?.let { useCases.updateShoppingItem(it) }
+                    recentlyRemovedItem = null
                 }
             }
         }

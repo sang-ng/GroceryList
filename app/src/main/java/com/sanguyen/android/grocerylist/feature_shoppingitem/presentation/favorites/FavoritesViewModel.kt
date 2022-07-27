@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.ShoppingItemsEvent
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.ShoppingItemsViewModel
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +26,7 @@ class FavoritesViewModel @Inject constructor(
     private val _state = mutableStateOf(FavoritesListState())
     val state = _state
 
-    private var recentlyDeletedItem: ShoppingItem? = null
+    private var recentlyRemovedItem: ShoppingItem? = null
 
     private var getShoppingItemsJob: Job? = null
     private val _itemTitle = mutableStateOf(
@@ -86,6 +84,8 @@ class FavoritesViewModel @Inject constructor(
                     event.shoppingItem.isFavorite = false
                     useCases.updateShoppingItem(event.shoppingItem)
 
+                    recentlyRemovedItem = event.shoppingItem
+
                     //refresh List
                     val current = _state.value.favorites
                     val replacement =
@@ -93,10 +93,12 @@ class FavoritesViewModel @Inject constructor(
                     _state.value.favorites = replacement
                 }
             }
-            is FavoritesEvents.RestoreShoppingItem -> {
+            is FavoritesEvents.RestoreFavorite -> {
                 viewModelScope.launch {
-//                    useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
-//                    recentlyDeletedItem = null
+
+                    recentlyRemovedItem?.isFavorite = true
+                    recentlyRemovedItem?.let { useCases.updateShoppingItem(it) }
+                    recentlyRemovedItem = null
                 }
             }
             is FavoritesEvents.AddToActualList -> {

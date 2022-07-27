@@ -119,7 +119,9 @@ fun FavoritesScreen(
             }
         }) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
             items(state.favorites, key = { it.id!! }) { item ->
 
@@ -133,7 +135,7 @@ fun FavoritesScreen(
                                     actionLabel = "Undo"
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(FavoritesEvents.RestoreShoppingItem)
+                                    viewModel.onEvent(FavoritesEvents.RestoreFavorite(item))
                                     println("Clicked")
                                 }
                             }
