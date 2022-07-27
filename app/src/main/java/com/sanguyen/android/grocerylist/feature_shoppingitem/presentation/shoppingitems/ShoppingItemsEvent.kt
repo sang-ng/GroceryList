@@ -2,6 +2,7 @@ package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shopp
 
 import androidx.compose.ui.focus.FocusState
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.FavoritesEvents
 
 sealed class ShoppingItemsEvent {
     data class EnteredTitle(val value: String) : ShoppingItemsEvent()
@@ -10,4 +11,6 @@ sealed class ShoppingItemsEvent {
     object SaveItem : ShoppingItemsEvent()
     object RestoreShoppingItem : ShoppingItemsEvent()
     data class MarkShoppingItem(val shoppingItem: ShoppingItem) : ShoppingItemsEvent()
+    data class RemoveFromActualList(val shoppingItem: ShoppingItem) : ShoppingItemsEvent()
+
 }

@@ -22,11 +22,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.components.FavoriteListItem
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
@@ -128,7 +126,7 @@ fun FavoritesScreen(
                 val dismissState = rememberDismissState(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                            viewModel.onEvent(FavoritesEvents.DeleteShoppingItem(item))
+                            viewModel.onEvent(FavoritesEvents.RemoveFromFavorites(item))
                             scope.launch {
                                 val result = scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Item deleted",
@@ -179,7 +177,7 @@ fun FavoritesScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.White),
-                            onClicked = {}
+                            onClicked = { viewModel.onEvent(FavoritesEvents.AddToActualList(item)) }
                         )
                     }
                 )

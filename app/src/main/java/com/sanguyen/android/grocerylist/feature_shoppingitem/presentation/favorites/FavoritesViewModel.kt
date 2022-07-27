@@ -64,7 +64,8 @@ class FavoritesViewModel @Inject constructor(
                             ShoppingItem(
                                 title = itemTitle.value.text,
                                 isFavorite = true,
-                                isMarked = false
+                                isMarked = false,
+                                isActual = false
                             )
                         )
                         _itemTitle.value = itemTitle.value.copy(
@@ -79,16 +80,35 @@ class FavoritesViewModel @Inject constructor(
                     }
                 }
             }
-            is FavoritesEvents.DeleteShoppingItem -> {
+            is FavoritesEvents.RemoveFromFavorites -> {
                 viewModelScope.launch {
-                    useCases.deleteShoppingItem(event.shoppingItem)
-                    recentlyDeletedItem = event.shoppingItem
+
+                    event.shoppingItem.isFavorite = false
+                    useCases.updateShoppingItem(event.shoppingItem)
+
+                    //refresh List
+                    val current = _state.value.favorites
+                    val replacement =
+                        current.map { if (it.id == event.shoppingItem.id) it.copy(isFavorite = !it.isFavorite) else it }
+                    _state.value.favorites = replacement
                 }
             }
             is FavoritesEvents.RestoreShoppingItem -> {
                 viewModelScope.launch {
-                    useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
-                    recentlyDeletedItem = null
+//                    useCases.addShoppingItem(recentlyDeletedItem ?: return@launch)
+//                    recentlyDeletedItem = null
+                }
+            }
+            is FavoritesEvents.AddToActualList -> {
+                viewModelScope.launch {
+                    event.shoppingItem.isActual = true
+                    useCases.updateShoppingItem(event.shoppingItem)
+
+                    //refresh List
+                    val current = _state.value.favorites
+                    val replacement =
+                        current.map { if (it.id == event.shoppingItem.id) it.copy(isActual = !it.isActual) else it }
+                    _state.value.favorites = replacement
                 }
             }
         }

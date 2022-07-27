@@ -123,7 +123,7 @@ fun ShoppingItemsScreen(
                 val dismissState = rememberDismissState(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                            viewModel.onEvent(ShoppingItemsEvent.DeleteShoppingItem(item))
+                            viewModel.onEvent(ShoppingItemsEvent.RemoveFromActualList(item))
                             scope.launch {
                                 val result = scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Item deleted",

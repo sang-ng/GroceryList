@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.FavoritesEvents
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,7 +67,8 @@ class ShoppingItemsViewModel @Inject constructor(
                             ShoppingItem(
                                 title = itemTitle.value.text,
                                 isFavorite = false,
-                                isMarked = false
+                                isMarked = false,
+                                isActual = true
                             )
                         )
                         _itemTitle.value = itemTitle.value.copy(
@@ -106,6 +108,19 @@ class ShoppingItemsViewModel @Inject constructor(
                     _state.value.shoppingItems = replacement
                 }
             }
+            is ShoppingItemsEvent.RemoveFromActualList -> {
+                viewModelScope.launch {
+
+                    event.shoppingItem.isActual = false
+                    useCases.updateShoppingItem(event.shoppingItem)
+
+                    //refresh List
+                    val current = _state.value.shoppingItems
+                    val replacement =
+                        current.map { if (it.id == event.shoppingItem.id) it.copy(isActual = !it.isActual) else it }
+                    _state.value.shoppingItems = replacement
+                }
+            }
         }
     }
 
@@ -115,7 +130,7 @@ class ShoppingItemsViewModel @Inject constructor(
         getShoppingItemsJob = useCases.getShoppingItems()
             .onEach { items ->
                 _state.value = state.value.copy(
-                    shoppingItems = items
+                    shoppingItems = items.filter { it.isActual }
                 )
             }.launchIn(viewModelScope)
     }

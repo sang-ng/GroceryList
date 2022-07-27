@@ -6,7 +6,9 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.Shoppi
 sealed class FavoritesEvents {
     data class EnteredTitle(val value: String) : FavoritesEvents()
     data class ChangedTitleFocus(val focusState: FocusState) : FavoritesEvents()
-    data class DeleteShoppingItem(val shoppingItem: ShoppingItem) : FavoritesEvents()
+    data class RemoveFromFavorites(val shoppingItem: ShoppingItem) : FavoritesEvents()
     object SaveItem : FavoritesEvents()
     object RestoreShoppingItem : FavoritesEvents()
+    data class AddToActualList(val shoppingItem: ShoppingItem) : FavoritesEvents()
+
 }
