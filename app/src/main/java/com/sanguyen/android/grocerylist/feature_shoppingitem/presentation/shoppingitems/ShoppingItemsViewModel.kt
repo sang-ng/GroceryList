@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.InvalidShoppingItemException
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
@@ -93,11 +92,7 @@ class ShoppingItemsViewModel @Inject constructor(
                     event.shoppingItem.isMarked = !event.shoppingItem.isMarked
                     useCases.updateShoppingItem(event.shoppingItem)
 
-                    //refresh List
-                    val current = _state.value.shoppingItems
-                    val replacement =
-                        current.map { if (it.id == event.shoppingItem.id) it.copy(isMarked = !it.isMarked) else it }
-                    _state.value.shoppingItems = replacement
+                    refreshList(shoppingItem = event.shoppingItem, toMap = "isMarked")
                 }
             }
             is ShoppingItemsEvent.RemoveFromActualList -> {
@@ -108,11 +103,7 @@ class ShoppingItemsViewModel @Inject constructor(
 
                     recentlyRemovedItem = event.shoppingItem
 
-                    //refresh List
-                    val current = _state.value.shoppingItems
-                    val replacement =
-                        current.map { if (it.id == event.shoppingItem.id) it.copy(isActual = !it.isActual) else it }
-                    _state.value.shoppingItems = replacement
+                    refreshList(shoppingItem = event.shoppingItem, toMap = "isActual")
                 }
             }
             is ShoppingItemsEvent.RestoreShoppingItem -> {
@@ -125,16 +116,28 @@ class ShoppingItemsViewModel @Inject constructor(
         }
     }
 
+    private fun refreshList(shoppingItem: ShoppingItem, toMap: String) {
+        val updatedList = emptyList<ShoppingItem>()
+        if (toMap == "isMarked") {
+            _state.value.shoppingItems =
+                _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isMarked = !it.isMarked) else it }
+        }
+        if (toMap == "isActual") {
+            _state.value.shoppingItems =
+                _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isMarked = !it.isActual) else it }
+        }
+
+
+        _state.value.shoppingItems = updatedList
+    }
+
     private fun getShoppingItems() {
         getShoppingItemsJob?.cancel()
 
         getShoppingItemsJob = useCases.getShoppingItems()
 
-
             .onEach { items ->
-
                 cleanShoppingItemDb(list = items)
-
                 _state.value = state.value.copy(
                     shoppingItems = items.filter { it.isActual }
                 )
