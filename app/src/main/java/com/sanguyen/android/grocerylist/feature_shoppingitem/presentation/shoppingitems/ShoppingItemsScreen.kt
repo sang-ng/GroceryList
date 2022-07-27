@@ -23,9 +23,11 @@ import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.destinations.FavoritesScreenDestination
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.FavoritesEvents
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.GroceryBottomAppBar
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -79,38 +81,14 @@ fun ShoppingItemsScreen(
             )
         },
         bottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TransparentHintTextField(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = titleState.text,
-                        hint = titleState.hint,
-                        onValueChange = {
-                            viewModel.onEvent(ShoppingItemsEvent.EnteredTitle(it))
-                        },
-                        onFocusChange = {
-                            viewModel.onEvent(ShoppingItemsEvent.ChangedTitleFocus(it))
-                        },
-                        isHintVisible = titleState.isHintVisible,
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.h6.copy(
-                            color = Color.White
-                        )
-                    )
-                    IconButton(
-                        onClick = { viewModel.onEvent(ShoppingItemsEvent.SaveItem) }) {
-                        Icon(
-                            imageVector = Icons.Default.Send,
-                            contentDescription = "Save",
-                            tint = Color.White
-                        )
-                    }
-                }
-            }
+            GroceryBottomAppBar(
+                text = titleState.text,
+                hint = titleState.hint,
+                onFocusChange = { viewModel.onEvent(ShoppingItemsEvent.ChangedTitleFocus(it)) },
+                onValueChange = { viewModel.onEvent(ShoppingItemsEvent.EnteredTitle(it)) },
+                isHintVisible = titleState.isHintVisible,
+                onClick = { viewModel.onEvent(ShoppingItemsEvent.SaveItem) }
+            )
         }
     ) {
 

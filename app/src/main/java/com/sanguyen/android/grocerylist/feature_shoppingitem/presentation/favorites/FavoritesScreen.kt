@@ -27,6 +27,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.components.FavoriteListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.GroceryBottomAppBar
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -83,40 +84,14 @@ fun FavoritesScreen(
             )
         },
         bottomBar = {
-            BottomAppBar() {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TransparentHintTextField(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = titleState.text,
-                        hint = titleState.hint,
-                        onValueChange = {
-                            viewModel.onEvent(FavoritesEvents.EnteredTitle(it))
-                        },
-                        onFocusChange = {
-                            viewModel.onEvent(FavoritesEvents.ChangedTitleFocus(it))
-                        },
-                        isHintVisible = titleState.isHintVisible,
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.h6.copy(
-                            color = Color.White
-                        )
-                    )
-                    IconButton(
-                        onClick = {
-                            viewModel.onEvent(FavoritesEvents.SaveItem)
-                        }) {
-                        Icon(
-                            imageVector = Icons.Default.Send,
-                            contentDescription = "Save",
-                            tint = Color.White
-                        )
-                    }
-                }
-            }
+            GroceryBottomAppBar(
+                text = titleState.text,
+                hint = titleState.hint,
+                onFocusChange = { viewModel.onEvent(FavoritesEvents.ChangedTitleFocus(it)) },
+                onValueChange = { viewModel.onEvent(FavoritesEvents.EnteredTitle(it)) },
+                isHintVisible = titleState.isHintVisible,
+                onClick = { viewModel.onEvent(FavoritesEvents.SaveItem) }
+            )
         }) {
         LazyColumn(
             modifier = Modifier
@@ -169,8 +144,7 @@ fun FavoritesScreen(
                                 contentDescription = "Icon",
                                 modifier = Modifier
                                     .scale(scale)
-                                    .padding(16.dp)
-                                ,
+                                    .padding(16.dp),
                                 tint = Color.White
                             )
                         }
