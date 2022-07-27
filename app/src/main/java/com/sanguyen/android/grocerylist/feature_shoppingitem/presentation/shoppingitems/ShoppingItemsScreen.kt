@@ -28,6 +28,7 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppi
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.GroceryBottomAppBar
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.SwipeToDismissBackground
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -122,30 +123,8 @@ fun ShoppingItemsScreen(
                     dismissThresholds = { FractionalThreshold(0.6f) },
                     background = {
 
-                        val color by animateColorAsState(
-                            targetValue = if (dismissState.targetValue == DismissValue.Default) LightRed else Color.Red
-                        )
+                        SwipeToDismissBackground(dismissState = dismissState)
 
-                        val scale by animateFloatAsState(
-                            targetValue =
-                            if (dismissState.targetValue == DismissValue.Default) 0.8f else 1.2f
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            Icon(
-                                Default.Delete,
-                                contentDescription = "Icon",
-                                modifier = Modifier
-                                    .scale(scale)
-                                    .padding(16.dp),
-                                tint = Color.White
-                            )
-                        }
                     },
                     dismissContent = {
                         ShoppingListItem(

@@ -1,34 +1,27 @@
 package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.components.FavoriteListItem
-import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.GroceryBottomAppBar
-import com.sanguyen.android.grocerylist.ui.theme.LightRed
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.components.SwipeToDismissBackground
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -110,7 +103,6 @@ fun FavoritesScreen(
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(FavoritesEvents.RestoreFavorite(item))
-                                    println("Clicked")
                                 }
                             }
                         }
@@ -124,30 +116,7 @@ fun FavoritesScreen(
                     dismissThresholds = { FractionalThreshold(0.6f) },
                     background = {
 
-                        val color by animateColorAsState(
-                            targetValue = if (dismissState.targetValue == DismissValue.Default) LightRed else Color.Red
-                        )
-
-                        val scale by animateFloatAsState(
-                            targetValue =
-                            if (dismissState.targetValue == DismissValue.Default) 0.8f else 1.2f
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            Icon(
-                                Icons.Default.Delete,
-                                contentDescription = "Icon",
-                                modifier = Modifier
-                                    .scale(scale)
-                                    .padding(16.dp),
-                                tint = Color.White
-                            )
-                        }
+                        SwipeToDismissBackground(dismissState = dismissState)
                     },
                     dismissContent = {
                         FavoriteListItem(
