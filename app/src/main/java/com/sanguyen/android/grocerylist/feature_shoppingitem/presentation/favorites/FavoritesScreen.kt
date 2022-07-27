@@ -121,7 +121,6 @@ fun FavoritesScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
         ) {
             items(state.favorites, key = { it.id!! }) { item ->
 
@@ -168,7 +167,10 @@ fun FavoritesScreen(
                             Icon(
                                 Icons.Default.Delete,
                                 contentDescription = "Icon",
-                                modifier = Modifier.scale(scale),
+                                modifier = Modifier
+                                    .scale(scale)
+                                    .padding(16.dp)
+                                ,
                                 tint = Color.White
                             )
                         }

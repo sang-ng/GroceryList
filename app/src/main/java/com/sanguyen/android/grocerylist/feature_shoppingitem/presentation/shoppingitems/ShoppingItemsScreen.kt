@@ -162,7 +162,9 @@ fun ShoppingItemsScreen(
                             Icon(
                                 Default.Delete,
                                 contentDescription = "Icon",
-                                modifier = Modifier.scale(scale),
+                                modifier = Modifier
+                                    .scale(scale)
+                                    .padding(16.dp),
                                 tint = Color.White
                             )
                         }
