@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
@@ -21,6 +22,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.components.FavoriteListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
@@ -30,8 +34,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
+@Destination
 @Composable
 fun FavoritesScreen(
+    navigator: DestinationsNavigator,
     viewModel: FavoritesViewModel = hiltViewModel()
 ) {
 
@@ -64,6 +70,12 @@ fun FavoritesScreen(
         topBar = {
 
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navigator.navigateUp() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+
+                    }
+                },
                 title = { Text("Favorites") },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {

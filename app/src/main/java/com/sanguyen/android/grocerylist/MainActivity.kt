@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.NavGraph
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.NavGraphs
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.FavoritesScreen
 import com.sanguyen.android.grocerylist.ui.theme.GroceryListTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,13 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GroceryListTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    FavoritesScreen()
-                }
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }

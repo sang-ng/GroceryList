@@ -19,6 +19,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.destinations.FavoritesScreenDestination
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
@@ -27,8 +31,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
+@Destination(start = true)
 @Composable
 fun ShoppingItemsScreen(
+    navigator: DestinationsNavigator,
     viewModel: ShoppingItemsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -64,7 +70,9 @@ fun ShoppingItemsScreen(
             TopAppBar(
                 title = { Text("Grocerylist") },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navigator.navigate(FavoritesScreenDestination)
+                    }) {
                         Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
                     }
                 }, elevation = 4.dp
