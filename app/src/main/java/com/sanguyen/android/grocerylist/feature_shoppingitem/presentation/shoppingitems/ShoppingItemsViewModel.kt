@@ -9,6 +9,7 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.Invali
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.model.ShoppingItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.ShoppingItemUseCases
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -117,9 +118,5 @@ class ShoppingItemsViewModel @Inject constructor(
                     shoppingItems = items
                 )
             }.launchIn(viewModelScope)
-    }
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
     }
 }

@@ -11,7 +11,7 @@ class AddShoppingItem(
     @Throws(InvalidShoppingItemException::class)
     suspend operator fun invoke(shoppingItem: ShoppingItem) {
         if (shoppingItem.title.isBlank()) {
-            throw InvalidShoppingItemException("The title of the shopping item can't be empty.")
+            throw InvalidShoppingItemException("This field cannot be empty.")
         }
 
         repository.insertShoppingItem(shoppingItem)

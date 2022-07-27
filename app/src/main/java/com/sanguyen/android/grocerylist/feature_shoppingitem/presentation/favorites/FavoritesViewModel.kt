@@ -10,6 +10,7 @@ import com.sanguyen.android.grocerylist.feature_shoppingitem.domain.use_case.Sho
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.ShoppingItemsEvent
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.ShoppingItemsViewModel
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ItemTextFieldState
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,7 +38,8 @@ class FavoritesViewModel @Inject constructor(
     )
     val itemTitle: State<ItemTextFieldState> = _itemTitle
 
-
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         getShoppingItems()
@@ -69,7 +71,11 @@ class FavoritesViewModel @Inject constructor(
                             text = ""
                         )
                     } catch (e: InvalidShoppingItemException) {
-
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                message = e.message ?: "Couldn't save note"
+                            )
+                        )
                     }
                 }
             }
@@ -99,8 +105,5 @@ class FavoritesViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
 
-    }
 }

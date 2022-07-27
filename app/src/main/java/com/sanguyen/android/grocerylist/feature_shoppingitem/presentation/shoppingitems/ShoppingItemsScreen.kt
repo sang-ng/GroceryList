@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.util.UiEvent
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -34,6 +35,19 @@ fun ShoppingItemsScreen(
     val titleState = viewModel.itemTitle.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
