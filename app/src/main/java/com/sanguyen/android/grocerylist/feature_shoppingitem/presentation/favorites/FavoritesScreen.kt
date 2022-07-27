@@ -1,4 +1,4 @@
-package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems
+package com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -8,28 +8,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.favorites.components.FavoriteListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.ShoppingListItem
 import com.sanguyen.android.grocerylist.feature_shoppingitem.presentation.shoppingitems.components.TransparentHintTextField
 import com.sanguyen.android.grocerylist.ui.theme.LightRed
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ShoppingItemsScreen(
-    viewModel: ShoppingItemsViewModel = hiltViewModel()
+fun FavoritesScreen(
+    viewModel: FavoritesViewModel = hiltViewModel()
 ) {
+
     val state = viewModel.state.value
     val titleState = viewModel.itemTitle.value
     val scaffoldState = rememberScaffoldState()
@@ -38,26 +40,25 @@ fun ShoppingItemsScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         snackbarHost = {
-            // reuse default SnackbarHost to have default animation and timing handling
             SnackbarHost(it) { data ->
-                // custom snackbar with the custom colors
                 Snackbar(
                     snackbarData = data
                 )
             }
         },
         topBar = {
+
             TopAppBar(
-                title = { Text("Grocerylist") },
+                title = { Text("Favorites") },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Favorites")
                     }
                 }, elevation = 4.dp
             )
         },
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar() {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -68,10 +69,10 @@ fun ShoppingItemsScreen(
                         text = titleState.text,
                         hint = titleState.hint,
                         onValueChange = {
-                            viewModel.onEvent(ShoppingItemsEvent.EnteredTitle(it))
+                            viewModel.onEvent(FavoritesEvents.EnteredTitle(it))
                         },
                         onFocusChange = {
-                            viewModel.onEvent(ShoppingItemsEvent.ChangedTitleFocus(it))
+                            viewModel.onEvent(FavoritesEvents.ChangedTitleFocus(it))
                         },
                         isHintVisible = titleState.isHintVisible,
                         singleLine = true,
@@ -80,7 +81,9 @@ fun ShoppingItemsScreen(
                         )
                     )
                     IconButton(
-                        onClick = { viewModel.onEvent(ShoppingItemsEvent.SaveItem) }) {
+                        onClick = {
+                            viewModel.onEvent(FavoritesEvents.SaveItem)
+                        }) {
                         Icon(
                             imageVector = Icons.Default.Send,
                             contentDescription = "Save",
@@ -89,26 +92,23 @@ fun ShoppingItemsScreen(
                     }
                 }
             }
-        }
-    ) {
-
-
+        }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(state.shoppingItems, key = { it.id!! }) { item ->
+            items(state.favorites, key = { it.id!! }) { item ->
 
                 val dismissState = rememberDismissState(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                            viewModel.onEvent(ShoppingItemsEvent.DeleteShoppingItem(item))
+                            viewModel.onEvent(FavoritesEvents.DeleteShoppingItem(item))
                             scope.launch {
                                 val result = scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Item deleted",
                                     actionLabel = "Undo"
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(ShoppingItemsEvent.RestoreShoppingItem)
+                                    viewModel.onEvent(FavoritesEvents.RestoreShoppingItem)
                                     println("Clicked")
                                 }
                             }
@@ -139,7 +139,7 @@ fun ShoppingItemsScreen(
                             contentAlignment = Alignment.CenterEnd
                         ) {
                             Icon(
-                                Default.Delete,
+                                Icons.Default.Delete,
                                 contentDescription = "Icon",
                                 modifier = Modifier.scale(scale),
                                 tint = Color.White
@@ -147,14 +147,12 @@ fun ShoppingItemsScreen(
                         }
                     },
                     dismissContent = {
-                        ShoppingListItem(
+                        FavoriteListItem(
                             shoppingItem = item,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.White),
-                            onChecked = {
-                                viewModel.onEvent(ShoppingItemsEvent.MarkShoppingItem(item))
-                            }
+                            onClicked = {}
                         )
                     }
                 )
