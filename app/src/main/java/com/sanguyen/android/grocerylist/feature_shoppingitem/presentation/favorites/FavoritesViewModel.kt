@@ -86,11 +86,7 @@ class FavoritesViewModel @Inject constructor(
 
                     recentlyRemovedItem = event.shoppingItem
 
-                    //refresh List
-                    val current = _state.value.favorites
-                    val replacement =
-                        current.map { if (it.id == event.shoppingItem.id) it.copy(isFavorite = !it.isFavorite) else it }
-                    _state.value.favorites = replacement
+                   refreshList(event.shoppingItem, "isFavorite")
                 }
             }
             is FavoritesEvents.RestoreFavorite -> {
@@ -106,14 +102,23 @@ class FavoritesViewModel @Inject constructor(
                     event.shoppingItem.isActual = true
                     useCases.updateShoppingItem(event.shoppingItem)
 
-                    //refresh List
-                    val current = _state.value.favorites
-                    val replacement =
-                        current.map { if (it.id == event.shoppingItem.id) it.copy(isActual = !it.isActual) else it }
-                    _state.value.favorites = replacement
+                    refreshList(event.shoppingItem, "isActual")
                 }
             }
         }
+    }
+
+    private fun refreshList(shoppingItem: ShoppingItem, toMap: String) {
+        val updatedList = emptyList<ShoppingItem>()
+        if (toMap == "isFavorite") {
+            _state.value.favorites =
+                _state.value.favorites.map { if (it.id == shoppingItem.id) it.copy(isFavorite = !it.isFavorite) else it }
+        }
+        if (toMap == "isActual") {
+            _state.value.favorites =
+                _state.value.favorites.map { if (it.id == shoppingItem.id) it.copy(isActual = !it.isActual) else it }
+        }
+        _state.value.favorites = updatedList
     }
 
     private fun getShoppingItems() {

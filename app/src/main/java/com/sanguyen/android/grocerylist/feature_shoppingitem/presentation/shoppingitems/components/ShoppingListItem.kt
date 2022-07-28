@@ -31,10 +31,12 @@ fun ShoppingListItem(
         if (shoppingItem.isMarked) {
             Text(
                 text = shoppingItem.title,
-                style = TextStyle(textDecoration = TextDecoration.LineThrough)
+                style = MaterialTheme.typography.h6.copy(
+                    textDecoration = TextDecoration.LineThrough
+                )
             )
         } else {
-            Text(text = shoppingItem.title)
+            Text(text = shoppingItem.title, style = MaterialTheme.typography.h6)
         }
     }
 }

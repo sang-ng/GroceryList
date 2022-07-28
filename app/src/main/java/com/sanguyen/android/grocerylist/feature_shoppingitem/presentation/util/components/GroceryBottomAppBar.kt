@@ -47,7 +47,7 @@ fun GroceryBottomAppBar(
                 },
                 isHintVisible = isHintVisible,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.h6.copy(
+                textStyle = MaterialTheme.typography.body1.copy(
                     color = Color.White
                 )
             )

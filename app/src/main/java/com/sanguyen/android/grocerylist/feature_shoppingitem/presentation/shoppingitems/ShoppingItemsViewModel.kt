@@ -126,8 +126,6 @@ class ShoppingItemsViewModel @Inject constructor(
             _state.value.shoppingItems =
                 _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isMarked = !it.isActual) else it }
         }
-
-
         _state.value.shoppingItems = updatedList
     }
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,7 +28,7 @@ fun FavoriteListItem(
         modifier = modifier.fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        Text(text = shoppingItem.title)
+        Text(text = shoppingItem.title, style = MaterialTheme.typography.h6)
         IconButton(
             onClick = onClicked,
         ) {
