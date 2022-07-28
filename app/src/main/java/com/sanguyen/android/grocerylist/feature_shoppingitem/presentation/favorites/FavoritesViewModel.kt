@@ -109,7 +109,6 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun refreshList(shoppingItem: ShoppingItem, toMap: String) {
-        val updatedList = emptyList<ShoppingItem>()
         if (toMap == "isFavorite") {
             _state.value.favorites =
                 _state.value.favorites.map { if (it.id == shoppingItem.id) it.copy(isFavorite = !it.isFavorite) else it }
@@ -118,7 +117,6 @@ class FavoritesViewModel @Inject constructor(
             _state.value.favorites =
                 _state.value.favorites.map { if (it.id == shoppingItem.id) it.copy(isActual = !it.isActual) else it }
         }
-        _state.value.favorites = updatedList
     }
 
     private fun getShoppingItems() {
