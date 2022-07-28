@@ -17,7 +17,8 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Blue,
     primaryVariant = Red,
-    secondary = Yellow
+    secondary = Yellow,
+    background = White
 
     /* Other default colors to override
     background = Color.White,
@@ -47,7 +48,7 @@ fun GroceryListTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
     val systemUiController = rememberSystemUiController()
     if(darkTheme){
         systemUiController.setSystemBarsColor(
-            color = Color.Transparent
+            color = Color.DarkGray
         )
     }else{
         systemUiController.setSystemBarsColor(

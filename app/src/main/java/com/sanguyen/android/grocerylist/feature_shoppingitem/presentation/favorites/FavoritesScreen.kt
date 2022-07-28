@@ -119,7 +119,7 @@ fun FavoritesScreen(
                             shoppingItem = item,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.White),
+                                .background(MaterialTheme.colors.background),
                             onClicked = { viewModel.onEvent(FavoritesEvents.AddToActualList(item)) }
                         )
                     }

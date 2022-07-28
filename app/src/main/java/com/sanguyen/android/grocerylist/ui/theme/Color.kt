@@ -2,6 +2,7 @@ package com.sanguyen.android.grocerylist.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val White = Color(0xFFFFFFFF)
 val Purple200 = Color(0xFFBB86FC)
 val Red = Color(0xFFD50000)
 val Blue = Color(0xFF546CF8)
