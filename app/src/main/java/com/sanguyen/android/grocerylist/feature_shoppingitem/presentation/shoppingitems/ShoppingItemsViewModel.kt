@@ -117,16 +117,14 @@ class ShoppingItemsViewModel @Inject constructor(
     }
 
     private fun refreshList(shoppingItem: ShoppingItem, toMap: String) {
-        val updatedList = emptyList<ShoppingItem>()
         if (toMap == "isMarked") {
             _state.value.shoppingItems =
                 _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isMarked = !it.isMarked) else it }
         }
         if (toMap == "isActual") {
             _state.value.shoppingItems =
-                _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isMarked = !it.isActual) else it }
+                _state.value.shoppingItems.map { if (it.id == shoppingItem.id) it.copy(isActual = !it.isActual) else it }
         }
-        _state.value.shoppingItems = updatedList
     }
 
     private fun getShoppingItems() {
