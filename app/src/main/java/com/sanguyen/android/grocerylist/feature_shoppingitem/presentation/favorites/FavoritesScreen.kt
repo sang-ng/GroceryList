@@ -69,11 +69,7 @@ fun FavoritesScreen(
                     }
                 },
                 title = { Text("Favorites") },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Favorites")
-                    }
-                }, elevation = 4.dp
+                elevation = 4.dp
             )
         },
         bottomBar = {
